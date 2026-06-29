@@ -1,0 +1,4 @@
+{
+  "name": "detectVisitorLanguage",
+  "entry": "entry.ts"
+}
