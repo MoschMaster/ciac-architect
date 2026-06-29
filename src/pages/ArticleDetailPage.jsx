@@ -3,6 +3,7 @@ import { ArrowLeft, Clock } from 'lucide-react';
 import { getArticleBySlug } from '@/lib/blogData';
 import DesignForDigitalSection from '@/components/ciac/DesignForDigitalSection';
 import ITSavvyArticle from '@/components/blog/ITSavvyArticle';
+import TWOModelArticle from '@/components/blog/TWOModelArticle';
 
 export default function ArticleDetailPage() {
   const { slug } = useParams();
@@ -73,6 +74,7 @@ export default function ArticleDetailPage() {
         </div>
       )}
       {article.type === 'it-savvy' && <ITSavvyArticle />}
+      {article.type === 'two-model' && <TWOModelArticle />}
 
       {/* Footer */}
       <footer className="bg-brand-charcoal border-t border-white/10 py-6 px-8 md:px-16">

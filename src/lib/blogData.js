@@ -23,6 +23,17 @@ export const articles = [
     author: 'Mischa van Ek',
     type: 'it-savvy',
   },
+  {
+    slug: 'two-model-en-enterprise-architectuur',
+    title: 'Waarom digitale transformatie vraagt om twee lenzen: TWO-model én Enterprise Architectuur',
+    excerpt:
+      'Het TWO-model maakt samenhang, onderstromen en blokkades in digitale transformatie zichtbaar. Enterprise Architectuur vertaalt deze inzichten naar concrete architectuurkeuzes, risico\'s en uitvoerbare roadmaps. Samen vormen ze een aanpak die menselijke én technische realiteit verbindt.',
+    category: 'Digitale strategie',
+    readingTime: '12 min',
+    publishedOn: '2026-06-29',
+    author: 'Mischa van Ek',
+    type: 'two-model',
+  },
 ];
 
 export function getArticleBySlug(slug) {
