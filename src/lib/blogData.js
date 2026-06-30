@@ -4,6 +4,7 @@ export const articles = [
   {
     slug: 'two-model-en-enterprise-architectuur',
     title: 'Waarom digitale transformatie vraagt om twee lenzen: TWO-model én Enterprise Architectuur',
+    metaTitle: 'TWO-model & Enterprise Architectuur',
     excerpt:
       'Het TWO-model maakt samenhang, onderstromen en blokkades in digitale transformatie zichtbaar. Enterprise Architectuur vertaalt deze inzichten naar concrete architectuurkeuzes, risico\'s en uitvoerbare roadmaps. Samen vormen ze een aanpak die menselijke én technische realiteit verbindt.',
     category: 'Digitale strategie',
@@ -15,6 +16,7 @@ export const articles = [
   {
     slug: 'design-for-digital',
     title: 'Design for Digital: de vijf bouwblokken voor een wendbare organisatie',
+    metaTitle: 'Design for Digital',
     excerpt:
       'Hoe MIT-onderzoekers Ross, Beath en Mocker laten zien dat blijvende digitale wendbaarheid niet draait om losse projecten, maar om vijf onderling versterkende bouwblokken.',
     category: 'Architectuurmodellen',
@@ -26,6 +28,7 @@ export const articles = [
   {
     slug: 'it-savvy',
     title: 'How IT Savvy is your enterprise? Vijf praktijken die elke IT-euro laten renderen',
+    metaTitle: 'How IT Savvy is your enterprise?',
     excerpt:
       'MIT-onderzoek van Peter Weill en Sinan Aral toont aan dat organisaties met hoge IT Savvy gemiddeld $250 verdienen per dollar geïnvesteerd in IT-infrastructuur — terwijl lage IT Savvy juist $900 per dollar kost.',
     category: 'Onderzoek & benchmarks',
