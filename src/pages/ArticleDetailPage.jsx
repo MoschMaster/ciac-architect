@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { getArticleBySlug } from '@/lib/blogData';
+import usePageMeta from '@/hooks/usePageMeta';
 import DesignForDigitalSection from '@/components/ciac/DesignForDigitalSection';
 import ITSavvyArticle from '@/components/blog/ITSavvyArticle';
 import TWOModelArticle from '@/components/blog/TWOModelArticle';
@@ -8,6 +9,8 @@ import TWOModelArticle from '@/components/blog/TWOModelArticle';
 export default function ArticleDetailPage() {
   const { slug } = useParams();
   const article = getArticleBySlug(slug);
+
+  usePageMeta(article?.metaTitle || article?.title, article?.excerpt);
 
   if (!article) {
     return (
