@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -10,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { CheckCircle2, Loader2 } from 'lucide-react';
+import { CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 
 const topics = [
   { value: 'strategie', label: 'Strategie & governance' },
@@ -30,6 +29,7 @@ export default function ConsultationFormSection() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -39,9 +39,23 @@ export default function ConsultationFormSection() {
     e.preventDefault();
     if (!form.name || !form.email) return;
     setSubmitting(true);
-    await base44.entities.ConsultationRequest.create(form);
-    setSubmitting(false);
-    setSubmitted(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/consultation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || 'Verzenden is mislukt. Probeer het later opnieuw.');
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setError(err.message || 'Er ging iets mis. Probeer het later opnieuw.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -139,6 +153,19 @@ export default function ConsultationFormSection() {
                   />
                 </FormField>
               </div>
+
+              {error && (
+                <div className="mt-4 flex items-start gap-3 bg-red-500/10 border border-red-500/30 rounded-sm px-4 py-3">
+                  <AlertCircle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+                  <p className="font-inter text-xs text-red-200 leading-relaxed">
+                    {error} Lukt het niet? Mail ons direct op{' '}
+                    <a href="mailto:ciac@conclusion.nl" className="underline hover:text-white">
+                      ciac@conclusion.nl
+                    </a>
+                    .
+                  </p>
+                </div>
+              )}
 
               <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <p className="font-inter text-xs text-white/40 leading-relaxed">

@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 import usePageMeta from '@/hooks/usePageMeta';
 import HeroSection from '@/components/ciac/HeroSection';
 import IntroSection from '@/components/ciac/IntroSection';
