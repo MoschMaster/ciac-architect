@@ -34,6 +34,34 @@ const highlights = [
   },
 ];
 
+// Ordered paragraph content — single source of truth shared by the desktop
+// (interactive) and mobile (stacked) layouts. Strings render as-is; objects
+// reference a highlight by id.
+const segments = [
+  'Conclusion IT Architecture Consultancy is de ',
+  { id: 'discipline' },
+  ' van het verbinden van ',
+  { id: 'strategie' },
+  ' zodat organisaties hun IT-landschap ',
+  { id: 'transformeren' },
+  ' en ',
+  { id: 'complexiteit' },
+  ' om zo over tijd een ',
+  { id: 'fundament' },
+  ' te bouwen.',
+];
+
+const highlightStyle = (isActive) => ({
+  background: isActive
+    ? 'linear-gradient(to bottom, transparent 15%, hsl(142, 60%, 25%) 15%, hsl(142, 60%, 25%) 95%, transparent 95%)'
+    : 'linear-gradient(to bottom, transparent 15%, hsl(142, 55%, 55%) 15%, hsl(142, 55%, 55%) 95%, transparent 95%)',
+  color: isActive ? '#fff' : 'inherit',
+  padding: '2px 4px',
+  borderRadius: '2px',
+  boxDecorationBreak: 'clone',
+  WebkitBoxDecorationBreak: 'clone',
+});
+
 function HighlightWord({ id, phrase, isActive, onEnter, onLeave, registerRef }) {
   return (
     <span
@@ -41,16 +69,7 @@ function HighlightWord({ id, phrase, isActive, onEnter, onLeave, registerRef }) 
       className="relative inline cursor-default transition-colors duration-300"
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      style={{
-        background: isActive
-          ? 'linear-gradient(to bottom, transparent 15%, hsl(142, 60%, 25%) 15%, hsl(142, 60%, 25%) 95%, transparent 95%)'
-          : 'linear-gradient(to bottom, transparent 15%, hsl(142, 55%, 55%) 15%, hsl(142, 55%, 55%) 95%, transparent 95%)',
-        color: isActive ? '#fff' : 'inherit',
-        padding: '2px 4px',
-        borderRadius: '2px',
-        boxDecorationBreak: 'clone',
-        WebkitBoxDecorationBreak: 'clone',
-      }}
+      style={highlightStyle(isActive)}
     >
       {phrase}
     </span>
@@ -162,9 +181,10 @@ export default function CIACDefinition() {
           Wat we bedoelen met Conclusion IT Architecture Consulting
         </h2>
 
+        {/* Desktop: interactive 3-column layout with connector lines */}
         <div
           ref={containerRef}
-          className="relative grid grid-cols-[minmax(140px,200px)_1fr_minmax(140px,200px)] gap-6 md:gap-10 items-start"
+          className="relative hidden md:grid grid-cols-[minmax(140px,200px)_1fr_minmax(140px,200px)] gap-6 md:gap-10 items-start"
         >
           {/* SVG connector overlay */}
           <svg
@@ -216,52 +236,21 @@ export default function CIACDefinition() {
               className="font-inter text-lg md:text-xl font-light text-foreground tracking-wide"
               style={{ lineHeight: '2.6' }}
             >
-              Conclusion IT Architecture Consultancy is de{' '}
-              <HighlightWord
-                id="discipline"
-                phrase={getHighlight('discipline').phrase}
-                isActive={activeId === 'discipline'}
-                onEnter={() => setActiveId('discipline')}
-                onLeave={() => setActiveId(null)}
-                registerRef={registerWordRef}
-              />{' '}
-              van het verbinden van{' '}
-              <HighlightWord
-                id="strategie"
-                phrase={getHighlight('strategie').phrase}
-                isActive={activeId === 'strategie'}
-                onEnter={() => setActiveId('strategie')}
-                onLeave={() => setActiveId(null)}
-                registerRef={registerWordRef}
-              />{' '}
-              zodat organisaties hun IT-landschap{' '}
-              <HighlightWord
-                id="transformeren"
-                phrase={getHighlight('transformeren').phrase}
-                isActive={activeId === 'transformeren'}
-                onEnter={() => setActiveId('transformeren')}
-                onLeave={() => setActiveId(null)}
-                registerRef={registerWordRef}
-              />{' '}
-              en{' '}
-              <HighlightWord
-                id="complexiteit"
-                phrase={getHighlight('complexiteit').phrase}
-                isActive={activeId === 'complexiteit'}
-                onEnter={() => setActiveId('complexiteit')}
-                onLeave={() => setActiveId(null)}
-                registerRef={registerWordRef}
-              />{' '}
-              om zo over tijd een{' '}
-              <HighlightWord
-                id="fundament"
-                phrase={getHighlight('fundament').phrase}
-                isActive={activeId === 'fundament'}
-                onEnter={() => setActiveId('fundament')}
-                onLeave={() => setActiveId(null)}
-                registerRef={registerWordRef}
-              />{' '}
-              te bouwen.
+              {segments.map((seg, i) =>
+                typeof seg === 'string' ? (
+                  <span key={i}>{seg}</span>
+                ) : (
+                  <HighlightWord
+                    key={seg.id}
+                    id={seg.id}
+                    phrase={getHighlight(seg.id).phrase}
+                    isActive={activeId === seg.id}
+                    onEnter={() => setActiveId(seg.id)}
+                    onLeave={() => setActiveId(null)}
+                    registerRef={registerWordRef}
+                  />
+                )
+              )}
             </p>
           </div>
 
@@ -280,6 +269,35 @@ export default function CIACDefinition() {
                 />
               ))}
           </div>
+        </div>
+
+        {/* Mobile: readable single-column layout with the annotations stacked
+            below the paragraph (no hover / connector lines on touch). */}
+        <div className="md:hidden">
+          <p className="font-inter text-base font-light text-foreground leading-loose">
+            {segments.map((seg, i) =>
+              typeof seg === 'string' ? (
+                <span key={i}>{seg}</span>
+              ) : (
+                <span key={seg.id} style={highlightStyle(false)}>
+                  {getHighlight(seg.id).phrase}
+                </span>
+              )
+            )}
+          </p>
+
+          <ul className="mt-10 space-y-5">
+            {highlights.map((h) => (
+              <li key={h.id} className="border-l-2 border-brand-green/40 pl-4">
+                <p className="font-inter text-sm font-medium text-foreground leading-snug">
+                  {h.phrase}
+                </p>
+                <p className="font-inter text-sm italic text-brand-green mt-1 leading-snug">
+                  {h.tooltip}
+                </p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

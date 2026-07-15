@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { LanguageProvider } from '@/lib/LanguageContext';
 import { Analytics } from '@vercel/analytics/react';
+import RouteTracker from '@/components/RouteTracker';
 // Add page imports here
 import CIACPage from './pages/CIACPage';
 import CaseDetailPage from './pages/CaseDetailPage';
@@ -60,6 +61,7 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <LanguageProvider>
           <Router>
+            <RouteTracker />
             <AuthenticatedApp />
           </Router>
         </LanguageProvider>

@@ -2,6 +2,8 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getCaseBySlug } from '@/lib/casesData';
+import usePageMeta from '@/hooks/usePageMeta';
+import JsonLd from '@/components/JsonLd';
 import CaseHeader from '@/components/cases/CaseHeader';
 import CaseFactsheet from '@/components/cases/CaseFactsheet';
 import CaseSection from '@/components/cases/CaseSection';
@@ -9,6 +11,13 @@ import CaseSection from '@/components/cases/CaseSection';
 export default function CaseDetailPage() {
   const { slug } = useParams();
   const caseItem = getCaseBySlug(slug);
+
+  usePageMeta(
+    caseItem ? `${caseItem.client} — klantcase` : 'Case niet gevonden',
+    caseItem?.description,
+    undefined,
+    'article'
+  );
 
   if (!caseItem) {
     return (
@@ -34,6 +43,18 @@ export default function CaseDetailPage() {
 
   return (
     <main className="font-inter bg-white min-h-screen">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: `${caseItem.client} — ${caseItem.tag || 'klantcase'}`,
+          description: caseItem.description,
+          articleSection: caseItem.sector,
+          author: { '@type': 'Organization', name: 'Conclusion IT Architecture Consulting' },
+          publisher: { '@type': 'Organization', name: 'Conclusion IT Architecture Consulting' },
+          about: { '@type': 'Organization', name: caseItem.client, url: caseItem.website },
+        }}
+      />
       <CaseHeader caseItem={caseItem} />
 
       {/* Two-column body: sticky factsheet + reading column */}

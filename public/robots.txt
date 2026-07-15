@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://conclusion-it-architecture.com/sitemap.xml

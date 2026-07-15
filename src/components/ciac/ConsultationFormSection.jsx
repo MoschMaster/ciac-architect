@@ -119,7 +119,7 @@ export default function ConsultationFormSection() {
                     placeholder="Bedrijfsnaam"
                   />
                 </FormField>
-                <FormField label="Onderwerp">
+                <FormField label="Onderwerp" as="div">
                   <Select
                     value={form.topic}
                     onValueChange={(value) => handleChange('topic', value)}
@@ -217,13 +217,13 @@ export default function ConsultationFormSection() {
   );
 }
 
-function FormField({ label, children }) {
+function FormField({ label, children, as: Wrapper = 'label' }) {
   return (
-    <label className="block">
+    <Wrapper className="block">
       <span className="font-inter text-[11px] font-medium tracking-[0.15em] uppercase text-white/50 mb-2 block">
         {label}
       </span>
       {children}
-    </label>
+    </Wrapper>
   );
 }

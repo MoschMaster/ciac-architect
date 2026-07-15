@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { getArticleBySlug } from '@/lib/blogData';
 import usePageMeta from '@/hooks/usePageMeta';
+import JsonLd from '@/components/JsonLd';
 import DesignForDigitalSection from '@/components/ciac/DesignForDigitalSection';
 import ITSavvyArticle from '@/components/blog/ITSavvyArticle';
 import TWOModelArticle from '@/components/blog/TWOModelArticle';
@@ -10,7 +11,12 @@ export default function ArticleDetailPage() {
   const { slug } = useParams();
   const article = getArticleBySlug(slug);
 
-  usePageMeta(article?.metaTitle || article?.title, article?.excerpt);
+  usePageMeta(
+    article?.metaTitle || article?.title || 'Artikel niet gevonden',
+    article?.excerpt,
+    undefined,
+    'article'
+  );
 
   if (!article) {
     return (
@@ -33,6 +39,18 @@ export default function ArticleDetailPage() {
 
   return (
     <main className="font-inter bg-white min-h-screen">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: article.title,
+          description: article.excerpt,
+          articleSection: article.category,
+          datePublished: article.publishedOn,
+          author: { '@type': 'Person', name: article.author },
+          publisher: { '@type': 'Organization', name: 'Conclusion IT Architecture Consulting' },
+        }}
+      />
       {/* Header */}
       <section className="bg-brand-charcoal pt-16 pb-20 px-8 md:px-16">
         <div className="max-w-4xl mx-auto">
