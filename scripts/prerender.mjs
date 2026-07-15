@@ -14,6 +14,24 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, '..', 'dist');
 const SITE_URL = (process.env.VITE_SITE_URL || 'https://conclusion-it-architecture.com').replace(/\/$/, '');
 
+// Vercel's build container lacks the system libraries puppeteer's bundled
+// Chromium needs (libnspr4.so, …). On Vercel we launch @sparticuz/chromium,
+// which ships those libs; locally we use puppeteer's own Chrome.
+const onVercel = !!process.env.VERCEL;
+
+async function getLaunchOptions() {
+  if (!onVercel) {
+    return { args: ['--no-sandbox', '--disable-setuid-sandbox'] };
+  }
+  const { default: chromium } = await import('@sparticuz/chromium');
+  chromium.setGraphicsMode = false;
+  return {
+    args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath: await chromium.executablePath(),
+    headless: true,
+  };
+}
+
 const routes = [
   '/',
   '/inzichten',
@@ -50,7 +68,10 @@ async function main() {
       // Give React/effects (usePageMeta, JsonLd) and the auth fallback time to settle.
       renderAfterTime: 4000,
       headless: true,
-      launchOptions: { args: ['--no-sandbox', '--disable-setuid-sandbox'] },
+      // Sparticuz Chromium runs single-process; render one route at a time on
+      // Vercel to stay stable. Locally we can parallelise.
+      maxConcurrentRoutes: onVercel ? 1 : 4,
+      launchOptions: await getLaunchOptions(),
     }),
   });
 
